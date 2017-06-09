@@ -16,10 +16,10 @@
 (function($CQ, _, Backbone, SCF) {
     "use strict";
 
-    console.log("registering blog SCF component");
+    console.log("registering blog post SCF component");
 
-    var Blog = SCF.Journal.extend({
-        modelName: "BlogModel",
+    var BlogPost = SCF.Topic.extend({
+        modelName: "BlogPostModel",
         setExtraData: function(extraData) {
             var error = _.bind(function(jqxhr, text, error) {
                 this.log.error("error setting extradata " + error);
@@ -38,7 +38,7 @@
             }, this);
             var postData = {
                 'extraData': extraData,
-                ':operation': 'social:setBlogExtraData'
+                ':operation': 'social:setBlogPostExtraData'
             };
             $CQ.ajax(SCF.config.urlRoot + this.get('id') + SCF.constants.URL_EXT, {
                 dataType: 'json',
@@ -53,8 +53,8 @@
         }
     });
 
-    var BlogView = SCF.JournalView.extend({
-        viewName: "Blog",
+    var BlogPostView = SCF.TopicView.extend({
+        viewName: "BlogPost",
         setExtraData: function(e){
             var extraData = this.getField("extraData");
             this.model.setExtraData(extraData);
@@ -63,8 +63,8 @@
     });
 
 
-    SCF.Blog = Blog;
-    SCF.BlogView = BlogView;
+    SCF.BlogPost = BlogPost;
+    SCF.BlogPostView = BlogPostView;
 
-    SCF.registerComponent('acme/components/blog/blog', SCF.Blog, SCF.BlogView);
+    SCF.registerComponent('acme/components/blog/post', SCF.BlogPost, SCF.BlogPostView);
 })($CQ, _, Backbone, SCF);

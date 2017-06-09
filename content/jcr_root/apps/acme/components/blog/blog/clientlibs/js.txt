@@ -1,1 +1,1 @@
-forum.js
+blog.js

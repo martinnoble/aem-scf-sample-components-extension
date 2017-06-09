@@ -19,6 +19,13 @@
     </scm>
     <properties>
         <install.target>/apps/acme/install</install.target>
+
+            <aem.host>localhost</aem.host>
+            <aem.port>4502</aem.port>
+            <aem.publish.host>localhost</aem.publish.host>
+            <aem.publish.port>4503</aem.publish.port>
+            <vault.user>admin</vault.user>
+            <vault.password>admin</vault.password>
     </properties>
 
     <!-- ====================================================================== -->
@@ -47,7 +54,6 @@
             <plugin>
                 <groupId>com.day.jcr.vault</groupId>
                 <artifactId>content-package-maven-plugin</artifactId>
-                <version>0.0.24</version>
                 <extensions>true</extensions>
                 <configuration>
                     <group>aem/scf/extensions-samples</group>
@@ -60,12 +66,7 @@
                     <prefix>/</prefix>
                     <filterSource>${basedir}/META-INF/vault/filter.xml</filterSource>
 
-                    <!-- maven archiver configuration -->
-                    <archive>
-                        <manifestEntries>
-                            <BuildVersion>${project.version}.${BUILD_NUMBER}</BuildVersion>
-                        </manifestEntries>
-                    </archive>
+
 
                     <!-- embedded dependencies in the content package -->
                     <embeddeds>
@@ -77,8 +78,48 @@
                     </embeddeds>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>htl-maven-plugin</artifactId>
+            </plugin>
+
         </plugins>
     </build>
+
+
+
+    <profiles>
+        <profile>
+            <id>autoInstallPackage</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.day.jcr.vault</groupId>
+                            <artifactId>content-package-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>install-package</id>
+                                    <goals>
+                                        <goal>install</goal>
+                                    </goals>
+                                    <configuration>
+                                        <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+    </profiles>
+
 
     <dependencies>
         <dependency>
